@@ -152,16 +152,45 @@ NGROK_DOMAIN=https://your-ngrok.ngrok.io
 ```
 
 ### Bitrix24 Local Application Setup
-1. Vào **Applications** > **Developer resources** > **Other**
-2. Click **"Create Local Application"**
-3. Cấu hình:
-   ```
-   Application Name: NestJS OAuth Test
-   Application Code: nestjs_oauth_test
-   Application URL: https://your-ngrok.ngrok.io
-   Installation Path: /install
-   Permissions: crm (CRM access)
-   ```
+
+## 📝 Hướng dẫn cấu hình Bitrix24 Local Application chi tiết
+
+1. **Truy cập Bitrix24 Admin Panel**
+  - Vào trang quản trị Bitrix24 của bạn (ví dụ: `https://your-company.bitrix24.com`).
+
+2. **Vào mục Developer Resources**
+  - Chọn menu **Applications** (Ứng dụng).
+  - Vào **Developer resources** > **Other**.
+
+3. **Tạo Local Application**
+  - Nhấn **"Create Local Application"** (Tạo ứng dụng cục bộ).
+
+4. **Nhập thông tin cấu hình ứng dụng:**
+  - **Application Name:** Đặt tên (ví dụ: `NestJS OAuth Test`)
+  - **Application Code:** Đặt mã (ví dụ: `nestjs_oauth_test`)
+  - **Application URL:** Dán URL ngrok HTTPS (ví dụ: `https://abc123.ngrok.io`)
+  - **Installation Path:** `/install`
+  - **Permissions:** Chọn quyền `crm` (để truy cập CRM/Contacts)
+
+5. **Lưu lại và lấy thông tin OAuth:**
+  - Sau khi tạo, bạn sẽ nhận được `CLIENT_ID` và `CLIENT_SECRET`.
+  - Cập nhật các giá trị này vào file `.env` của dự án:
+    ```
+    BITRIX24_CLIENT_ID=your_client_id
+    BITRIX24_CLIENT_SECRET=your_client_secret
+    BITRIX24_DOMAIN=your-company.bitrix24.com
+    BITRIX24_REDIRECT_URI=https://abc123.ngrok.io/oauth/callback
+    ```
+
+6. **Cài đặt ngrok và chạy server NestJS:**
+  - Chạy ngrok: `ngrok http 3000`
+  - Khởi động NestJS: `npm run start:dev`
+
+7. **Cài đặt ứng dụng trên Bitrix24:**
+  - Truy cập đường dẫn cài đặt: `https://abc123.ngrok.io/install`
+  - Làm theo hướng dẫn để hoàn tất quá trình xác thực OAuth.
+
+Sau khi hoàn thành, ứng dụng sẽ kết nối được với Bitrix24 và sử dụng các API CRM. Nếu gặp lỗi, kiểm tra lại URL ngrok, quyền ứng dụng, và thông tin trong file `.env`.
 
 ## 🏗️ Implementation Details
 
@@ -265,6 +294,36 @@ export class AllExceptionsFilter implements ExceptionFilter {
 ```
 
 ## 🧪 Testing
+
+### Unit Test Service Bitrix24
+
+#### Unit test Bitrix24Service
+
+File: `src/bitrix24/bitrix24.service.spec.ts`
+
+```bash
+npm run test src/bitrix24/bitrix24.service.spec.ts
+```
+
+Kết quả:
+
+```
+ PASS  src/bitrix24/bitrix24.service.spec.ts
+  Bitrix24Service
+    ✓ should be defined (6 ms)
+    ✓ should process installation and save token (1 ms)
+    ✓ should call Bitrix24 API and return result (6 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       3 passed, 3 total
+Snapshots:   0 total
+Time:        2.7 s
+```
+
+Các test đã kiểm tra:
+- Khởi tạo service thành công
+- Xử lý cài đặt và lưu token
+- Gọi API Bitrix24 và trả về kết quả
 
 ### API Contact Management Testing (Bài 2)
 
