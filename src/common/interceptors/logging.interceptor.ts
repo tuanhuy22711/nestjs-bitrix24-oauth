@@ -27,7 +27,7 @@ export class LoggingInterceptor implements NestInterceptor {
       method,
       url,
       ip,
-      userAgent: userAgent.substring(0, 100), // Truncate long user agents
+      userAgent: userAgent.substring(0, 100), 
     });
 
     return next.handle().pipe(
@@ -41,7 +41,7 @@ export class LoggingInterceptor implements NestInterceptor {
           try {
             responseSize = JSON.stringify(data).length;
           } catch (error) {
-            responseSize = -1; // Indicates circular reference or non-serializable data
+            responseSize = -1; 
           }
 
           this.logger.log('📤 Request completed', {
